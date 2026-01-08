@@ -3,10 +3,10 @@ import 'dotenv/config'
 import connectDB from './database/connectDB.js';
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 import authRoutes from "./routes/authRoutes.js";
-import connectDB from "./config/db.js";
+import connectDB from "./database/connectDB.js";
 connectDB();
 
 app.use(express.json());
