@@ -5,7 +5,14 @@ import connectDB from './database/connectDB.js';
 const app = express();
 const port = 3000;
 
+import authRoutes from "./routes/authRoutes.js";
+import connectDB from "./config/db.js";
 connectDB();
+
+app.use(express.json());
+
+app.use("/api/auth", authRoutes);
+
 
 app.get('/', (req, res) => {
   res.send('Welcome to the Badminton-MVP');
