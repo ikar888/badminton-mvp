@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router"; // 👈 use react-router-dom
+import { useNavigate } from "react-router";
 import axios from "axios";
 
 const LoginModal = ({ onClose, openSignup }) => {
@@ -22,12 +22,11 @@ const LoginModal = ({ onClose, openSignup }) => {
       const response = await axios.post(
         "http://localhost:3000/api/v1/auth/login",
         { email, password },
-        { withCredentials: true } // 👈 allow cookies
+        { withCredentials: true }
       );
 
-      // ✅ backend only returns { message, user }
       if (response.status === 200 && response.data.user) {
-        await login(response.data.user); // no token needed, cookie is already set
+        await login(response.data.user);
         onClose();
         navigate("/home");
       } else {
