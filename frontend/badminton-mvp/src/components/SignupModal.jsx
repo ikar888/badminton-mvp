@@ -31,13 +31,12 @@ const SignupModal = ({ onClose, openLogin }) => {
         { username, email, password, skillLevel }
       );
 
-      // ✅ Success check without token
       if (response.status === 201) {
         setSuccess("User registered successfully");
         setTimeout(() => {
-          onClose(); // close signup modal
-          openLogin(); // open login modal
-        }, 1500); // show success for 1.5s before switching
+          onClose();
+          openLogin();
+        }, 1500);
       } else {
         setError(response.data.message || "Signup failed");
       }
@@ -55,7 +54,6 @@ const SignupModal = ({ onClose, openLogin }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center z-20 bg-black/50">
       <div className="bg-white rounded-lg shadow-lg p-8 w-96 relative">
-        {/* Close button */}
         <button
           onClick={onClose}
           className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
@@ -65,14 +63,12 @@ const SignupModal = ({ onClose, openLogin }) => {
 
         <h2 className="text-2xl font-bold mb-4 text-emerald-900">Signup</h2>
 
-        {/* Error message */}
         {error && (
           <div className="bg-red-100 text-red-700 p-2 mb-4 rounded text-sm">
             {error}
           </div>
         )}
 
-        {/* Success message */}
         {success && (
           <div className="bg-green-100 text-green-700 p-2 mb-4 rounded text-sm">
             {success}
@@ -156,7 +152,6 @@ const SignupModal = ({ onClose, openLogin }) => {
           </button>
         </form>
 
-        {/* Already have account link */}
         <p className="mt-6 text-center text-sm text-gray-600">
           Already have an account?{" "}
           <button
