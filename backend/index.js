@@ -1,15 +1,22 @@
-import express from 'express';
-import 'dotenv/config'
-import connectDB from './database/connectDB.js';
+import dotenv from "dotenv";
+import express from "express";
+import authRoutes from "./routes/authRoutes.js";
+import connectDB from "./database/connectDB.js";
+
+dotenv.config();
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 connectDB();
 
-app.get('/', (req, res) => {
-  res.send('Welcome to the Badminton-MVP');
-})
+app.use(express.json());
+app.use("/api/v1/auth", authRoutes);
+
+app.get("/", (req, res) => {
+  res.send("Welcome to the Badminton-MVP");
+});
+
 app.listen(port, () => {
   console.log(`Running @ http://localhost:${port}`);
 });
