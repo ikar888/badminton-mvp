@@ -31,7 +31,7 @@ const LandingPage = () => {
         {/* Hero section */}
         <main className="flex flex-col items-center justify-start min-h-screen text-center px-6 pt-32 relative z-10">
           <h1 className="text-6xl font-extrabold text-lime-500 mb-5">
-            Rally with the right partner
+            Rally with the Right Partner
           </h1>
           <p className="text-2xl text-gray-100 max-w-2xl mb-8">
             Whether singles or doubles, pairing up for badminton has never been
@@ -61,7 +61,15 @@ const LandingPage = () => {
               }}
             />
           )}
-          {showSignup && <SignupModal onClose={() => setShowSignup(false)} />}
+          {showSignup && (
+            <SignupModal
+              onClose={() => setShowSignup(false)}
+              openLogin={() => {
+                setShowSignup(false);
+                setShowLogin(true);
+              }}
+            />
+          )}
         </div>
       )}
     </div>
