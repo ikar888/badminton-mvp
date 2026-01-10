@@ -52,7 +52,15 @@ const LandingPage = () => {
       {/* Modal layer */}
       {isModalOpen && (
         <div className="absolute inset-0 z-40 flex items-center justify-center">
-          {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
+          {showLogin && (
+            <LoginModal
+              onClose={() => setShowLogin(false)}
+              openSignup={() => {
+                setShowLogin(false);
+                setShowSignup(true);
+              }}
+            />
+          )}
           {showSignup && <SignupModal onClose={() => setShowSignup(false)} />}
         </div>
       )}
