@@ -1,9 +1,12 @@
 import React from "react";
-import { NavLink } from "react-router";
+import { NavLink } from "react-router"; // use react-router-dom
 import { FaHome, FaUser, FaCreditCard, FaSignOutAlt } from "react-icons/fa";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router";
 
 const Navbar = ({ onLoginClick, onSignupClick }) => {
-  const isLoggedIn = !!localStorage.getItem("token");
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   const guestMenu = [
     { name: "Login", action: onLoginClick },
@@ -16,10 +19,17 @@ const Navbar = ({ onLoginClick, onSignupClick }) => {
     { name: "Session", path: "/session", icon: <FaUser /> },
     { name: "Profile", path: "/profile", icon: <FaUser /> },
     { name: "Payment", path: "/payment", icon: <FaCreditCard /> },
-    { name: "Logout", path: "/logout", icon: <FaSignOutAlt /> },
+    {
+      name: "Logout",
+      action: () => {
+        logout();
+        navigate("/");
+      },
+      icon: <FaSignOutAlt />,
+    },
   ];
 
-  const menuItems = isLoggedIn ? userMenu : guestMenu;
+  const menuItems = user ? userMenu : guestMenu;
 
   return (
     <nav className="bg-black text-white w-full fixed top-0 shadow-md z-10">
@@ -35,6 +45,7 @@ const Navbar = ({ onLoginClick, onSignupClick }) => {
           </span>
         </div>
 
+        {/* Menu */}
         <ul className="flex space-x-6">
           {menuItems.map((item) => (
             <li key={item.name}>
