@@ -37,15 +37,15 @@ const sessionSchema = mongoose.Schema ({
     default: 'Doubles'
   },
 
-  players: {
+  players: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User', // reference to User
-  },
+  }],
 
-  queue: {
+  queue: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Match', // reference to Match
-  },
+  }],
 
   createdAt: {
     type: Date,
