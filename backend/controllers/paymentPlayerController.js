@@ -1,0 +1,93 @@
+import Payment from  "../models/payment.js";
+import Match from "../models/match.js";
+
+const viewMyPayment = async (req, res) => {
+  try {
+    const userID = req.payload.id;
+    const { sessionID } = req.params;
+    const viewPayment = await Payment.find({
+      playerID: userID,
+      sessionID: sessionID
+    });
+
+    if(!viewPayment.length) {
+      return res.status(404).json({
+        message: "No record found"
+      })
+    };
+
+    res.status(200).json({
+      data: viewPayment
+    });
+
+  } catch (error) {
+    console.error("View Payment error:", error);
+    res.status(500).json({
+      message: "Server error during view payment"
+    })
+  }
+}
+
+const generateTotalAmount = async (req, res) => {
+  try {
+    const { sessionID } = req.params;
+    const userID = req.payload.id;
+    const completedMatchCount = await Match.countDocuments({
+      sessionID: sessionID,
+      status: "Completed",
+      $or: [
+        {teamA: userID},
+        {teamB: userID}
+      ]
+    });
+
+    if(!completedMatchCount) {
+      return res.status(404).json({
+        message: "No completed matches found"
+      })
+    };
+
+    const paymentRecord = await Payment.findOne({
+      playerID: userID,
+      sessionID: sessionID
+    });
+
+    if(!paymentRecord) {
+      return res.status(404).json({
+        message: "Payment record not found"
+      })
+    }
+
+    const updatedPaymentRecord = await Payment.findOneAndUpdate({
+      playerID: userID,
+      sessionID: sessionID
+    }, {
+      gamesPlayed: completedMatchCount,
+      totalAmount: completedMatchCount * paymentRecord.perGameFee
+    },
+    { 
+      new: true
+    }
+  );
+
+    res.status(200).json({
+      message: "Successfully updated the total Amount"
+    });
+
+  } catch (error) {
+    console.error("Generate Total Amount error:", error);
+    res.status(500).json({
+      message: "Server error during generate total amount"
+    })
+  }
+}
+
+const makePayment = async (req, res) => {
+  //for strip to make the payment status to completed
+}
+
+export {
+  viewMyPayment,
+  generateTotalAmount,
+  makePayment
+}
