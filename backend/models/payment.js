@@ -31,16 +31,24 @@ const paymentSchema = mongoose.Schema ({
     type: Number,
   },
 
+  paymentMethod: { 
+    type: String, 
+  },
+
   status: { 
     type: String, 
     enum: ["Pending", "Completed"], 
     default: "Pending" 
   },
 
+  paymentMadeAt: {
+    type: Date,
+  },
+
   createdAt: { 
     type: Date,
     default: Date.now
-  },
+  }
 
 }, {timestamps: true});
 

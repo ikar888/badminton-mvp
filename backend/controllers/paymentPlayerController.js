@@ -1,5 +1,6 @@
 import Payment from  "../models/payment.js";
 import Match from "../models/match.js";
+import stripe from "stripe";
 
 const viewMyPayment = async (req, res) => {
   try {
@@ -71,6 +72,7 @@ const generateTotalAmount = async (req, res) => {
   );
 
     res.status(200).json({
+      data: updatedPaymentRecord,
       message: "Successfully updated the total Amount"
     });
 
@@ -83,7 +85,37 @@ const generateTotalAmount = async (req, res) => {
 }
 
 const makePayment = async (req, res) => {
-  //for strip to make the payment status to completed
+  try {
+    const userID = req.payload.id;
+    const { sessionID } = req.params;
+    const viewPayment = await Payment.findOne({
+      playerID: userID,
+      sessionID: sessionID
+    });
+
+    const paymentIntent = await stripe.PaymentIntents.create({
+      amount: viewPayment.totalAmount * 100,
+      currency: "php"
+    });
+
+    const savePayment = await Payment.findOneAndUpdate({
+      playerID: userID,
+      sessionID: sessionID
+    } , {
+      paymentMethod: "Stripe",
+      status: "Completed",
+      paymentMadeAt: new Date()
+    } , { 
+      new: true
+    }
+  );
+
+  } catch (error) {
+    console.error("Payment error:", error);
+    res.status(500).json({
+      message: "Payment Failed"
+    })
+  }
 }
 
 export {
