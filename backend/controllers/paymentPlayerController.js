@@ -1,6 +1,8 @@
 import Payment from  "../models/payment.js";
 import Match from "../models/match.js";
-import stripe from "stripe";
+import Stripe from "stripe";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
 const viewMyPayment = async (req, res) => {
   try {
