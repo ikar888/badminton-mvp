@@ -6,6 +6,8 @@ import connectDB from "./database/connectDB.js";
 import sessionRoutes from "./routes/sessionRoutes.js";
 import cors from "cors";
 import paymentPlayerRoutes from "./routes/paymentPlayerRoutes.js"
+import paymentPlayerRoutes from "./routes/paymentPlayerRoutes.js"
+
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -22,7 +24,6 @@ app.use(
 app.use(cookieParser());
 
 app.use("/api/v1/auth", authRoutes);
-app.use("/api/v1/paymentPlayer", paymentPlayerRoutes);
 app.use("/api/v1/sessions", sessionRoutes);
 
 app.get("/", (req, res) => {
