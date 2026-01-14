@@ -8,17 +8,17 @@ export const signup = async (req, res) => {
 
     if (!username || !email || !password || !skillLevel) {
       return res.status(400).json({
-        message: "All fields are required",
+        message: "All fields are required"
       });
     }
 
     const existingUser = await User.findOne({
-      $or: [{ email }, { username }],
+      $or: [{ email }, { username }]
     });
 
     if (existingUser) {
       return res.status(409).json({
-        message: "Username or email already in use",
+        message: "Username or email already in use"
       });
     }
 
@@ -28,7 +28,7 @@ export const signup = async (req, res) => {
       username,
       email,
       password: hashedPassword,
-      skillLevel,
+      skillLevel
     });
 
     res.status(201).json({
@@ -37,13 +37,13 @@ export const signup = async (req, res) => {
         id: user._id,
         username: user.username,
         email: user.email,
-        skillLevel: user.skillLevel,
-      },
+        skillLevel: user.skillLevel
+      }
     });
   } catch (error) {
     console.error("Signup error:", error);
     res.status(500).json({
-      message: "Server error during signup",
+      message: "Server error during signup"
     });
   }
 };
@@ -54,27 +54,29 @@ export const login = async (req, res) => {
 
     if (!email || !password) {
       return res.status(400).json({
-        message: "Email and password are required",
+        message: "Email and password are required"
       });
     }
 
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({
-        message: "User not found",
+        message: "User not found"
       });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({
-        message: "Invalid credentials",
+        message: "Invalid credentials"
       });
     }
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1d",
-    });
+    const token = jwt.sign(
+      { userId: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
 
     res.cookie("token", token, {
       httpOnly: true,
@@ -89,13 +91,13 @@ export const login = async (req, res) => {
         id: user._id,
         username: user.username,
         email: user.email,
-        skillLevel: user.skillLevel,
-      },
+        skillLevel: user.skillLevel
+      }
     });
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({
-      message: "Server error during login",
+      message: "Server error during login"
     });
   }
 };
