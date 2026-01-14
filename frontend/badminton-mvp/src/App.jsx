@@ -4,6 +4,7 @@ import LandingPage from "./pages/LandingPage";
 import Root from "./utils/Root";
 import HomePage from "./pages/HomePage";
 import ProtectedRoutes from "./utils/ProtectedRoutes";
+import AboutPage from "./pages/AboutPage";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Root />}>
           <Route index element={<LandingPage />} />
+          <Route path="/about" element={<AboutPage />} />
         </Route>
         <Route
           path="/home"
