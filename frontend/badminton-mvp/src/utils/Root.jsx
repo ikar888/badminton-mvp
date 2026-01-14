@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router";
-import { Outlet } from "react-router";
+import { useNavigate, Outlet } from "react-router";
+import Navbar from "../components/Navbar";
 
 const Root = () => {
   const { user } = useAuth();
@@ -15,7 +15,10 @@ const Root = () => {
 
   return (
     <div>
-      <Outlet />
+      <Navbar />
+      <main className="pt-16">
+        <Outlet />
+      </main>
     </div>
   );
 };
