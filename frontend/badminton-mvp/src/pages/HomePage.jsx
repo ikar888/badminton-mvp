@@ -1,6 +1,7 @@
 import React from "react";
 import Navbar from "../components/Navbar";
 import { useAuth } from "../context/AuthContext";
+import Button01 from "../components/Button01"
 
 const HomePage = () => {
   const { user } = useAuth();
@@ -44,6 +45,15 @@ const HomePage = () => {
             </p>
           </div>
         </div>
+        <p className="text-xl text-gray-700 mb-2 mt-10">
+          You can choose to:
+        </p>
+        <Button01 
+        buttonName="Create a Session" 
+        onClick={() => {}}/>
+        <Button01 
+        buttonName="Join a Session" 
+        onClick={() => {}}/>
       </main>
     </div>
   );
