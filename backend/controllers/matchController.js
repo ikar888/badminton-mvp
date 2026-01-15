@@ -107,7 +107,7 @@ export const startMatch = async (req, res) => {
     match.status = "Ongoing";
     await match.save();
 
-    res.json(match);
+    return res.status(200).json(match);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -167,7 +167,7 @@ export const completeMatch = async (req, res) => {
       }
     }
 
-    res.json({
+    return res.status(200).json({
       match, 
       message: "Match Completed and Payments updated"
     });
@@ -215,7 +215,7 @@ export const substitutePlayer = async (req, res) => {
     }
 
     await match.save();
-    res.json(match);
+    return res.status(200).json(match);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -224,12 +224,29 @@ export const substitutePlayer = async (req, res) => {
 export const getMatchesBySession = async (req, res) => {
   try {
     const { sessionId } = req.params;
+    const session = await Session.findById(sessionId);
+
+    if (!session) {
+      return res.status(404).json({ message: "Session not found" });
+    }
+
+    const userId = req.user._id.toString();
+
+    const isGameMaster =
+      session.gameMasterID.toString() === userId;
+
+    const isParticipant =
+      session.players.some(id => id.toString() === userId);
+
+    if (!isGameMaster && !isParticipant) {
+      return res.status(403).json({ message: "Not authorized" });
+    }
 
     const matches = await Match.find({ sessionID: sessionId })
       .populate("teamA teamB", "username email")
       .sort({ createdAt: -1 });
 
-    res.json(matches);
+    return res.status(200).json(matches);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
