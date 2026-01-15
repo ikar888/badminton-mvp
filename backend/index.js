@@ -3,6 +3,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/authRoutes.js";
 import connectDB from "./database/connectDB.js";
+import sessionRoutes from "./routes/sessionRoutes.js";
 import cors from "cors";
 import paymentPlayerRoutes from "./routes/paymentPlayerRoutes.js"
 
@@ -22,6 +23,7 @@ app.use(cookieParser());
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/paymentPlayer", paymentPlayerRoutes);
+app.use("/api/v1/sessions", sessionRoutes);
 
 app.get("/", (req, res) => {
   res.send("Welcome to the Badminton-MVP");
