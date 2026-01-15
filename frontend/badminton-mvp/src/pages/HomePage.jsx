@@ -2,9 +2,11 @@ import React from "react";
 import Navbar from "../components/Navbar";
 import { useAuth } from "../context/AuthContext";
 import Button01 from "../components/Button01"
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -45,12 +47,12 @@ const HomePage = () => {
             </p>
           </div>
         </div>
-        <p className="text-xl text-gray-700 mb-2 mt-10">
+        <p className="text-lg text-gray-700 mb-2 mt-10">
           You can choose to:
         </p>
         <Button01 
         buttonName="Create a Session" 
-        onClick={() => {}}/>
+        onClick={() => {navigate("/create-session")}}/>
         <Button01 
         buttonName="Join a Session" 
         onClick={() => {}}/>
