@@ -9,6 +9,7 @@ const matchSchema = mongoose.Schema ({
 
   sequenceNumber: {
     type: Number,
+    required: true
   },
 
   teamA: [{

@@ -59,12 +59,20 @@ export const createMatchFromSession = async (req, res) => {
       });
     }
 
+    const matchCount = await Match.countDocuments({
+      sessionID: session._id
+    });
+
     const match = await Match.create({
       sessionID: session._id,
       teamA,
       teamB,
       status: "Scheduled",
+      sequenceNumber: matchCount + 1
     });
+
+    session.queue.push(match._id);
+    await session.save();
 
     res.status(201).json(match);
   } catch (err) {
@@ -163,7 +171,7 @@ export const completeMatch = async (req, res) => {
       match, 
       message: "Match Completed and Payments updated"
     });
-    
+
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
