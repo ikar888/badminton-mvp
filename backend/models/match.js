@@ -23,7 +23,7 @@ const matchSchema = mongoose.Schema ({
 
   status: {
     type: String,
-    enum: ["Scheduled", "Completed"],
+    enum: ["Scheduled", "Ongoing" , "Completed"],
     default: "Scheduled"
   }
 }, {timestamps: true});
