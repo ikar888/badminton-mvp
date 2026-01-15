@@ -42,7 +42,7 @@ export const joinSession = async (req, res) => {
     session.players.push(userId);
     await session.save();
 
-    res.json(session);
+    res.status(200).json(session);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -73,7 +73,7 @@ export const getSessionById = async (req, res) => {
       });
     }
 
-    res.json(session);
+    res.status(200).json(session);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
