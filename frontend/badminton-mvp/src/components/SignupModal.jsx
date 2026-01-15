@@ -27,7 +27,7 @@ const SignupModal = ({ onClose, openLogin }) => {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/auth/signup`,
+        `${import.meta.env.VITE_API_URL}/api/v1/auth/signup`,
         { username, email, password, skillLevel }
       );
 
