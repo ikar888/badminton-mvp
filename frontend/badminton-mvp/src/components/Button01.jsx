@@ -3,7 +3,7 @@ const Button01 = ({ onClick, buttonName}) => {
     <>
     <button
     onClick={onClick}
-    className="bg-emerald-600 text-white text-lg py-2 px-4 m-3 hover:not-focus:bg-green-700 cursor-pointer rounded-[10px] "
+    className="bg-emerald-900 text-white text-lg py-2 px-4 m-3 hover:bg-emerald-700 disabled:opacity-50 rounded"
     >
       {buttonName}
     </button>

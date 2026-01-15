@@ -7,7 +7,10 @@ import {
   FaSignOutAlt,
   FaBars,
   FaTimes,
+  FaPen,
+  FaTasks
 } from "react-icons/fa";
+
 import { useAuth } from "../context/AuthContext";
 
 const Navbar = ({ onLoginClick, onSignupClick }) => {
@@ -31,7 +34,8 @@ const Navbar = ({ onLoginClick, onSignupClick }) => {
 
   const userMenu = [
     { name: "Home", path: "/home", icon: <FaHome /> },
-    { name: "Session", path: "/session", icon: <FaUser /> },
+    { name: "Create Session", path: "/create-session", icon: <FaPen /> },
+    { name: "Join Session", path: "/join-session", icon: <FaTasks /> },
     { name: "Profile", path: "/profile", icon: <FaUser /> },
     { name: "Payment", path: "/payment", icon: <FaCreditCard /> },
     {
