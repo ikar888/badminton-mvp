@@ -12,12 +12,13 @@ const CreateSession = () => {
   const [startTime, setStartTime] = useState();
   const [endTime, setEndTime] = useState();
   const [perGameFee, setPerGameFee] = useState("");
+  const [sessionCode, setSessionCode] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      await createSession({
+      const res = await createSession({
         location,
         date,
         startTime,
@@ -25,7 +26,9 @@ const CreateSession = () => {
         perGameFee,
       });
 
-      alert("Session created successfully");
+      const code = res.sessionId || res._id;
+      setSessionCode(code);
+
     } catch (err) {
       console.error(err);
       alert(err.response?.data?.message || "Failed to create session");
@@ -129,6 +132,16 @@ const CreateSession = () => {
                 >
                 Create Session
             </button>
+
+            {sessionCode && (
+              <div className="mt-6 text-emerald-900">
+                <p className="text-lg font-medium">Session Code:</p>
+                <p className="mt-2 font-mono bg-white px-4 py-2 rounded border inline-block">
+                  {sessionCode}
+                </p>
+              </div>
+            )}
+
           </form>
         </main>
     </div>
