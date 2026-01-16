@@ -23,8 +23,8 @@ const JoinSession = () => {
     }
 
     try {
-      await api.post(`/sessions/${sessionCode}/join`);
-      navigate(`/session/${sessionCode}`);
+      await api.patch(`/api/v1/sessions/${sessionCode}/join`);
+      navigate("/home");
     } catch (err) {
       console.error(err);
       alert(err.response?.data?.message || "Failed to join session");
