@@ -14,23 +14,23 @@ const JoinSession = () => {
   const inputClass =
     "border border-gray-300 rounded px-3 py-2 w-64 focus:ring-2 focus:ring-emerald-500 focus:outline-none bg-white text-left";
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+    const handleSubmit = async (e) => {
+      e.preventDefault();
 
-    if (!sessionCode.trim()) {
-      alert("Session code is required");
-      return;
-    }
+      try {
+        await api.patch(`/api/v1/sessions/${sessionCode}/join`);
+        navigate("/home");
+      } catch (err) {
+        const message = err.response?.data?.message;
 
-    try {
-      await api.patch(`/api/v1/sessions/${sessionCode}/join`);
-      navigate("/home");
-    } catch (err) {
-      console.error(err);
-      alert(err.response?.data?.message || "Failed to join session");
-    }
-  };
+        if (message === "User already joined this session") {
+          navigate("/home");
+          return;
+        }
 
+        alert(message || "Failed to join session");
+      }
+    };
   return (
     <div className="min-h-screen bg-gray-100">
       <Navbar />
