@@ -5,6 +5,7 @@ import Root from "./utils/Root";
 import HomePage from "./pages/HomePage";
 import ProtectedRoutes from "./utils/ProtectedRoutes";
 import AboutPage from "./pages/AboutPage";
+import CreateSession from "./pages/CreateSession";
 
 function App() {
   return (
@@ -19,6 +20,14 @@ function App() {
           element={
             <ProtectedRoutes>
               <HomePage />
+            </ProtectedRoutes>
+          }
+        ></Route>
+        <Route
+          path="/create-session"
+          element={
+            <ProtectedRoutes>
+              <CreateSession />
             </ProtectedRoutes>
           }
         ></Route>
