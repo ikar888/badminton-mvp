@@ -7,7 +7,7 @@ const SignupModal = ({ onClose, openLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [skillLevel, setSkillLevel] = useState("beginner");
+  const [skillLevel, setSkillLevel] = useState("Beginner");
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -81,7 +81,7 @@ const SignupModal = ({ onClose, openLogin }) => {
             placeholder="Full Name"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            className="w-full border rounded px-3 py-2"
+            className="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
             required
           />
           <input
@@ -89,7 +89,7 @@ const SignupModal = ({ onClose, openLogin }) => {
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full border rounded px-3 py-2"
+            className="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
             required
           />
 
@@ -100,7 +100,7 @@ const SignupModal = ({ onClose, openLogin }) => {
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full border rounded px-3 py-2 pr-10"
+              className="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
               required
             />
             <button
@@ -119,7 +119,7 @@ const SignupModal = ({ onClose, openLogin }) => {
               placeholder="Confirm Password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full border rounded px-3 py-2 pr-10"
+              className="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
               required
             />
             <button
@@ -135,7 +135,7 @@ const SignupModal = ({ onClose, openLogin }) => {
           <select
             value={skillLevel}
             onChange={(e) => setSkillLevel(e.target.value)}
-            className="w-full border rounded px-3 py-2"
+            className="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
             required
           >
             <option value="beginner">Beginner</option>
