@@ -5,7 +5,7 @@ import authRoutes from "./routes/authRoutes.js";
 import connectDB from "./database/connectDB.js";
 import sessionRoutes from "./routes/sessionRoutes.js";
 import cors from "cors";
-import paymentPlayerRoutes from "./routes/paymentPlayerRoutes.js"
+import paymentGMRoutes from "./routes/paymentGMRoutes.js";
 import paymentPlayerRoutes from "./routes/paymentPlayerRoutes.js"
 
 
@@ -25,6 +25,11 @@ app.use(cookieParser());
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/sessions", sessionRoutes);
+
+
+
+app.use("/api/v1/payments/gm", paymentGMRoutes);
+app.use("/api/v1/payments/player", paymentPlayerRoutes);
 
 app.get("/", (req, res) => {
   res.send("Welcome to the Badminton-MVP");
