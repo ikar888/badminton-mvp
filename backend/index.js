@@ -6,7 +6,6 @@ import connectDB from "./database/connectDB.js";
 import sessionRoutes from "./routes/sessionRoutes.js";
 import cors from "cors";
 import paymentPlayerRoutes from "./routes/paymentPlayerRoutes.js"
-import paymentPlayerRoutes from "./routes/paymentPlayerRoutes.js"
 
 
 const app = express();

@@ -1,5 +1,4 @@
 import Payment from  "../models/payment.js";
-import Match from "../models/match.js";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
@@ -30,61 +29,61 @@ const viewMyPayment = async (req, res) => {
     })
   }
 }
+// will now be handled by match controller
+// const generateTotalAmount = async (req, res) => {
+//   try {
+//     const { sessionID } = req.params;
+//     const userID = req.payload.id;
+//     const completedMatchCount = await Match.countDocuments({
+//       sessionID: sessionID,
+//       status: "Completed",
+//       $or: [
+//         {teamA: userID},
+//         {teamB: userID}
+//       ]
+//     });
 
-const generateTotalAmount = async (req, res) => {
-  try {
-    const { sessionID } = req.params;
-    const userID = req.payload.id;
-    const completedMatchCount = await Match.countDocuments({
-      sessionID: sessionID,
-      status: "Completed",
-      $or: [
-        {teamA: userID},
-        {teamB: userID}
-      ]
-    });
+//     if(!completedMatchCount) {
+//       return res.status(404).json({
+//         message: "No completed matches found"
+//       })
+//     };
 
-    if(!completedMatchCount) {
-      return res.status(404).json({
-        message: "No completed matches found"
-      })
-    };
+//     const paymentRecord = await Payment.findOne({
+//       playerID: userID,
+//       sessionID: sessionID
+//     });
 
-    const paymentRecord = await Payment.findOne({
-      playerID: userID,
-      sessionID: sessionID
-    });
+//     if(!paymentRecord) {
+//       return res.status(404).json({
+//         message: "Payment record not found"
+//       })
+//     }
 
-    if(!paymentRecord) {
-      return res.status(404).json({
-        message: "Payment record not found"
-      })
-    }
+//     const updatedPaymentRecord = await Payment.findOneAndUpdate({
+//       playerID: userID,
+//       sessionID: sessionID
+//     }, {
+//       gamesPlayed: completedMatchCount,
+//       totalAmount: completedMatchCount * paymentRecord.perGameFee
+//     },
+//     { 
+//       new: true
+//     }
+//   );
 
-    const updatedPaymentRecord = await Payment.findOneAndUpdate({
-      playerID: userID,
-      sessionID: sessionID
-    }, {
-      gamesPlayed: completedMatchCount,
-      totalAmount: completedMatchCount * paymentRecord.perGameFee
-    },
-    { 
-      new: true
-    }
-  );
+//     res.status(200).json({
+//       data: updatedPaymentRecord,
+//       message: "Successfully updated the total Amount"
+//     });
 
-    res.status(200).json({
-      data: updatedPaymentRecord,
-      message: "Successfully updated the total Amount"
-    });
-
-  } catch (error) {
-    console.error("Generate Total Amount error:", error);
-    res.status(500).json({
-      message: "Server error during generate total amount"
-    })
-  }
-}
+//   } catch (error) {
+//     console.error("Generate Total Amount error:", error);
+//     res.status(500).json({
+//       message: "Server error during generate total amount"
+//     })
+//   }
+// }
 
 const makePayment = async (req, res) => {
   try {
@@ -122,6 +121,5 @@ const makePayment = async (req, res) => {
 
 export {
   viewMyPayment,
-  generateTotalAmount,
   makePayment
 }
