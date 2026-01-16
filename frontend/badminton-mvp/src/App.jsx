@@ -1,11 +1,12 @@
 import "./App.css";
-import { BrowserRouter as Router, Routes, Route } from "react-router";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import Root from "./utils/Root";
 import HomePage from "./pages/HomePage";
 import ProtectedRoutes from "./utils/ProtectedRoutes";
 import AboutPage from "./pages/AboutPage";
 import CreateSession from "./pages/CreateSession";
+import JoinSession from "./pages/JoinSession";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/" element={<Root />}>
           <Route index element={<LandingPage />} />
           <Route path="/about" element={<AboutPage />} />
+          
         </Route>
         <Route
           path="/home"
@@ -31,7 +33,14 @@ function App() {
             </ProtectedRoutes>
           }
         ></Route>
-      </Routes>
+        <Route 
+          path="/join-session" 
+          element={
+            <ProtectedRoutes>  
+              <JoinSession />
+            </ProtectedRoutes>
+          }
+         /></Routes>
     </Router>
   );
 }
