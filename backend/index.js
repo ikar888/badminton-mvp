@@ -6,6 +6,7 @@ import matchRoutes from "./routes/matchRoutes.js";
 import connectDB from "./database/connectDB.js";
 import sessionRoutes from "./routes/sessionRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import analysisRoutes from "./routes/analysisRoutes.js";
 import cors from "cors";
 
 dotenv.config();
@@ -28,6 +29,7 @@ app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/sessions", sessionRoutes);
 app.use("/api/v1/matches", matchRoutes);
 app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/video", analysisRoutes);
 
 app.get("/", (req, res) => {
   res.send("Welcome to the Badminton-MVP");
