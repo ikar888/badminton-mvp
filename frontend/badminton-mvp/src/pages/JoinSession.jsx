@@ -1,65 +1,118 @@
-import Navbar from "../components/Navbar";
-import TextBox from "../components/TextBox";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar";
 import api from "../api/axios";
 
 const JoinSession = () => {
-  const [sessionCode, setSessionCode] = useState("");
+  const [sessions, setSessions] = useState([]);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+
   const navigate = useNavigate();
 
-  const rowClass = "flex items-center justify-center mb-4";
-  const labelClass =
-    "text-lg font-medium text-emerald-900 w-32 text-right mr-4";
-  const inputClass =
-    "border border-gray-300 rounded px-3 py-2 w-64 focus:ring-2 focus:ring-emerald-500 focus:outline-none bg-white text-left";
-
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-
+  useEffect(() => {
+    const fetchSessions = async () => {
       try {
-        await api.patch(`/api/v1/sessions/${sessionCode}/join`);
-        navigate("/home");
+        const res = await api.get("/api/v1/sessions");
+        setSessions(res.data);
       } catch (err) {
-        const message = err.response?.data?.message;
-
-        if (message === "User already joined this session") {
-          navigate("/home");
-          return;
-        }
-
-        alert(message || "Failed to join session");
+        setError("Failed to load sessions");
+      } finally {
+        setLoading(false);
       }
     };
+
+    fetchSessions();
+  }, []);
+
+  const handleJoin = async (sessionId) => {
+    try {
+      await api.patch(`/api/v1/sessions/${sessionId}/join`);
+      navigate("/home");
+    } catch (err) {
+      const message = err.response?.data?.message;
+
+      if (message === "User already joined this session") {
+        navigate("/home");
+        return;
+      }
+
+      setError(message || "Failed to join session");
+    }
+  };
+
+  const now = new Date();
+
+  const upcomingSessions = sessions.filter((session) => {
+    const sessionDateTime = new Date(
+      `${session.date} ${session.startTime}`
+    );
+    return sessionDateTime >= now;
+  });
+
+  const sortedSessions = upcomingSessions.sort((a, b) => {
+    const dateA = new Date(`${a.date} ${a.startTime}`);
+    const dateB = new Date(`${b.date} ${b.startTime}`);
+    return dateA - dateB;
+  });
+
   return (
     <div className="min-h-screen bg-gray-100">
       <Navbar />
 
       <main className="pt-24 px-8 text-center">
-        <form onSubmit={handleSubmit}>
-          <h1 className="text-4xl font-bold text-emerald-900 mb-6">
-            Join a Game Session
-          </h1>
+        <h1 className="text-4xl font-bold text-emerald-900 mb-6">
+          Join a Game Session
+        </h1>
 
-          <div className={rowClass}>
-            <label className={labelClass}>Session Code:</label>
-            <TextBox
-              className={inputClass}
-              type="text"
-              placeholderText="Enter session code"
-              value={sessionCode}
-              onChange={(value) => setSessionCode(value)}
-              required
-            />
+        {error && (
+          <div className="bg-red-100 text-red-700 p-2 mb-4 rounded text-sm">
+            {error}
           </div>
+        )}
 
-          <button
-            type="submit"
-            className="bg-emerald-700 text-white px-6 py-2 rounded hover:bg-emerald-800"
-          >
-            Join Session
-          </button>
-        </form>
+        {loading && (
+          <p className="text-gray-600">Loading sessions...</p>
+        )}
+
+        {!loading && sortedSessions.length === 0 && (
+          <p className="text-gray-600">
+            No upcoming sessions available.
+          </p>
+        )}
+
+        <div className="max-w-xl mx-auto">
+          {sortedSessions.map((session) => (
+            <div
+              key={session._id}
+              className="bg-white p-4 rounded shadow mb-4 text-left"
+            >
+              <p>
+                <span className="font-medium">Location:</span>{" "}
+                {session.location}
+              </p>
+              <p>
+                <span className="font-medium">Date:</span>{" "}
+                {session.date}
+              </p>
+              <p>
+                <span className="font-medium">Time:</span>{" "}
+                {session.startTime} – {session.endTime}
+              </p>
+              <p>
+                <span className="font-medium">Fee:</span>{" "}
+                ₱{session.perGameFee}
+              </p>
+
+              <button
+                onClick={() => handleJoin(session._id)}
+                className="mt-3 bg-emerald-700 text-white px-4 py-2 rounded hover:bg-emerald-800"
+              >
+                Join Session
+              </button>
+            </div>
+          ))}
+        </div>
       </main>
     </div>
   );
