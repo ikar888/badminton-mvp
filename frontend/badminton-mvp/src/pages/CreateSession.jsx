@@ -22,7 +22,7 @@ const CreateSession = () => {
     e.preventDefault();
 
     try {
-      const res = await createSession({
+      await createSession({
         location,
         date,
         startTime,
@@ -55,6 +55,19 @@ const CreateSession = () => {
             <h1 className="text-4xl font-bold text-emerald-900 mb-6">
               Create a Game Session
             </h1>
+
+            {error && (
+              <div className="bg-red-100 text-red-700 p-2 mb-4 rounded text-sm">
+                {error}
+              </div>
+            )}
+
+            {success && (
+              <div className="bg-green-100 text-green-700 p-2 mb-4 rounded text-sm">
+                {success}
+              </div>
+            )}
+
             <div className={rowClass}>
               <label 
               className={labelClass}
@@ -140,18 +153,6 @@ const CreateSession = () => {
                 >
                 Create Session
             </button>
-
-          {success && (
-            <p className="mt-4 text-emerald-700 font-medium">
-              {success}
-            </p>
-          )}
-
-          {error && (
-            <p className="mt-4 text-red-600 font-medium">
-              {error}
-            </p>
-          )}
           </form>
         </main>
     </div>
