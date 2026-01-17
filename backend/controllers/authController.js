@@ -12,13 +12,11 @@ export const signup = async (req, res) => {
       });
     }
 
-    const existingUser = await User.findOne({
-      $or: [{ email }, { username }],
-    });
+    const existingUser = await User.findOne({ email });
 
     if (existingUser) {
       return res.status(409).json({
-        message: "Username or email already in use",
+        message: "Email already in use",
       });
     }
 
