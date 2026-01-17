@@ -13,7 +13,7 @@ const JoinSession = () => {
   useEffect(() => {
     const fetchSessions = async () => {
       try {
-        const res = await api.get("/api/v1/sessions");
+        const res = await api.get("/api/v1/sessions/upcoming");
         setSessions(res.data);
       } catch (err) {
         setError("Failed to load sessions");
@@ -41,21 +41,6 @@ const JoinSession = () => {
     }
   };
 
-  const now = new Date();
-
-  const upcomingSessions = sessions.filter((session) => {
-    const sessionDateTime = new Date(
-      `${session.date} ${session.startTime}`
-    );
-    return sessionDateTime >= now;
-  });
-
-  const sortedSessions = upcomingSessions.sort((a, b) => {
-    const dateA = new Date(`${a.date} ${a.startTime}`);
-    const dateB = new Date(`${b.date} ${b.startTime}`);
-    return dateA - dateB;
-  });
-
   return (
     <div className="min-h-screen bg-gray-100">
       <Navbar />
@@ -75,14 +60,14 @@ const JoinSession = () => {
           <p className="text-gray-600">Loading sessions...</p>
         )}
 
-        {!loading && sortedSessions.length === 0 && (
+        {!loading && sessions.length === 0 && (
           <p className="text-gray-600">
             No upcoming sessions available.
           </p>
         )}
 
         <div className="max-w-xl mx-auto">
-          {sortedSessions.map((session) => (
+          {sessions.map((session) => (
             <div
               key={session._id}
               className="bg-white p-4 rounded shadow mb-4 text-left"
@@ -91,14 +76,25 @@ const JoinSession = () => {
                 <span className="font-medium">Location:</span>{" "}
                 {session.location}
               </p>
+
               <p>
                 <span className="font-medium">Date:</span>{" "}
-                {session.date}
+                {new Date(session.date).toLocaleDateString()}
               </p>
+
               <p>
                 <span className="font-medium">Time:</span>{" "}
-                {session.startTime} – {session.endTime}
+                {new Date(session.startTime).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}{" "}
+                –{" "}
+                {new Date(session.endTime).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
               </p>
+
               <p>
                 <span className="font-medium">Fee:</span>{" "}
                 ₱{session.perGameFee}
