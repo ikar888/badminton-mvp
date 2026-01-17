@@ -4,6 +4,7 @@ import { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { createSession } from "../api/sessionApi";
+import { useNavigate } from "react-router-dom";
 
 const CreateSession = () => {
 
@@ -12,7 +13,10 @@ const CreateSession = () => {
   const [startTime, setStartTime] = useState();
   const [endTime, setEndTime] = useState();
   const [perGameFee, setPerGameFee] = useState("");
-  const [sessionCode, setSessionCode] = useState(null);
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,12 +30,16 @@ const CreateSession = () => {
         perGameFee,
       });
 
-      const code = res.sessionId || res._id;
-      setSessionCode(code);
+    setSuccess("Session created successfully");
+    setError("");
+
+    setTimeout(() => {
+      navigate("/home");
+    }, 1500);
 
     } catch (err) {
-      console.error(err);
-      alert(err.response?.data?.message || "Failed to create session");
+      setError(err.response?.data?.message || "Failed to create session");
+      setSuccess("");
     }
   };
 
@@ -133,15 +141,17 @@ const CreateSession = () => {
                 Create Session
             </button>
 
-            {sessionCode && (
-              <div className="mt-6 text-emerald-900">
-                <p className="text-lg font-medium">Session Code:</p>
-                <p className="mt-2 font-mono bg-white px-4 py-2 rounded border inline-block">
-                  {sessionCode}
-                </p>
-              </div>
-            )}
+          {success && (
+            <p className="mt-4 text-emerald-700 font-medium">
+              {success}
+            </p>
+          )}
 
+          {error && (
+            <p className="mt-4 text-red-600 font-medium">
+              {error}
+            </p>
+          )}
           </form>
         </main>
     </div>
