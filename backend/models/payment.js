@@ -31,6 +31,11 @@ const paymentSchema = mongoose.Schema ({
     type: Number,
   },
 
+  paymentIntentId: {
+    type: String,
+    unique: true
+  },
+
   paymentMethod: { 
     type: String, 
   },

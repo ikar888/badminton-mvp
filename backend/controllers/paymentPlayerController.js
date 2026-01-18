@@ -42,14 +42,21 @@ const makePayment = async (req, res) => {
 
     const paymentIntent = await stripe.paymentIntents.create({
       amount: viewPayment.totalAmount * 100,
-      currency: "php"
+      currency: "php",
+      automatic_payment_methods: {
+        enabled: true,
+        allow_redirects: 'never' 
+      }
     });
+
+    viewPayment.paymentIntentId = paymentIntent.id;
+    await viewPayment.save();
   
-  res.status(200).json({
-    message: "Payment Intent Created",
-    clientSecret: paymentIntent.client_secret,
-    paymentIntentId: paymentIntent.id
-  });
+    res.status(200).json({
+      message: "Payment Intent Created",
+      clientSecret: paymentIntent.client_secret,
+      paymentIntentId: paymentIntent.id
+    });
 
   } catch (error) {
     console.error("Payment error:", error);
