@@ -27,6 +27,10 @@ export const signup = async (req, res) => {
       email,
       password: hashedPassword,
       skillLevel,
+      role: {
+        isPlayer: true,
+        isGameMaster: false
+      }
     });
 
     res.status(201).json({
