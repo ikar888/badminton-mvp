@@ -9,6 +9,7 @@ const JoinSession = () => {
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(true);
   const [joiningId, setJoiningId] = useState(null);
+  const [joinedIds, setJoinedIds] = useState(new Set());
 
   const navigate = useNavigate();
 
@@ -18,7 +19,7 @@ const JoinSession = () => {
         const res = await api.get("/api/v1/sessions/upcoming");
         setSessions(res.data);
         setError("");
-      } catch (err) {
+      } catch {
         setError("Failed to load sessions");
       } finally {
         setLoading(false);
@@ -34,6 +35,7 @@ const JoinSession = () => {
     try {
       await api.patch(`/api/v1/sessions/${sessionId}/join`);
 
+      setJoinedIds((prev) => new Set(prev).add(sessionId));
       setSuccess("Successfully joined the session");
       setError("");
 
@@ -44,8 +46,9 @@ const JoinSession = () => {
       const message = err.response?.data?.message;
 
       if (message === "User already joined this session") {
-        setSuccess("");
-        setError("You are already part of this session");
+        setJoinedIds((prev) => new Set(prev).add(sessionId));
+        setError("");
+        setSuccess("You already joined this session");
         return;
       }
 
@@ -88,48 +91,64 @@ const JoinSession = () => {
         )}
 
         <div className="max-w-xl mx-auto">
-          {sessions.map((session) => (
-            <div
-              key={session._id}
-              className="bg-white p-4 rounded shadow mb-4 text-left"
-            >
-              <p>
-                <span className="font-medium">Location:</span>{" "}
-                {session.location}
-              </p>
+          {sessions.map((session) => {
+            const isJoining = joiningId === session._id;
+            const isJoined = joinedIds.has(session._id);
 
-              <p>
-                <span className="font-medium">Date:</span>{" "}
-                {new Date(session.date).toLocaleDateString()}
-              </p>
-
-              <p>
-                <span className="font-medium">Time:</span>{" "}
-                {new Date(session.startTime).toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}{" "}
-                –{" "}
-                {new Date(session.endTime).toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-              </p>
-
-              <p>
-                <span className="font-medium">Fee:</span>{" "}
-                ₱{session.perGameFee}
-              </p>
-
-              <button
-                onClick={() => handleJoin(session._id)}
-                disabled={joiningId === session._id}
-                className="mt-3 bg-emerald-700 text-white px-4 py-2 rounded hover:bg-emerald-800 disabled:opacity-50"
+            return (
+              <div
+                key={session._id}
+                className="bg-white p-4 rounded shadow mb-4 text-left"
               >
-                {joiningId === session._id ? "Joining..." : "Join Session"}
-              </button>
-            </div>
-          ))}
+                <p>
+                  <span className="font-medium">Game Master:</span>{" "}
+                  {session.gameMaster?.username ||
+                    session.gameMasterName ||
+                    "Unknown"}
+                </p>
+
+                <p>
+                  <span className="font-medium">Location:</span>{" "}
+                  {session.location}
+                </p>
+
+                <p>
+                  <span className="font-medium">Date:</span>{" "}
+                  {new Date(session.date).toLocaleDateString()}
+                </p>
+
+                <p>
+                  <span className="font-medium">Time:</span>{" "}
+                  {new Date(session.startTime).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}{" "}
+                  –{" "}
+                  {new Date(session.endTime).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </p>
+
+                <p>
+                  <span className="font-medium">Fee:</span>{" "}
+                  ₱{session.perGameFee}
+                </p>
+
+                <button
+                  onClick={() => handleJoin(session._id)}
+                  disabled={isJoining || isJoined}
+                  className="mt-3 bg-emerald-700 text-white px-4 py-2 rounded hover:bg-emerald-800 disabled:opacity-50"
+                >
+                  {isJoined
+                    ? "Joined"
+                    : isJoining
+                    ? "Joining..."
+                    : "Join Session"}
+                </button>
+              </div>
+            );
+          })}
         </div>
       </main>
     </div>
