@@ -78,3 +78,17 @@ export const getSessionById = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+export const getUpcomingSessions = async (req, res) => {
+  try {
+    const now = new Date();
+
+    const sessions = await Session.find({
+      date: { $gte: now }
+    }).sort({ date: 1, startTime: 1});
+
+    res.status(200).json(sessions);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch sessions" });
+  }
+};
