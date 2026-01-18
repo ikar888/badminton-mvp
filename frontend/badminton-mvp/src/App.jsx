@@ -7,6 +7,7 @@ import ProtectedRoutes from "./utils/ProtectedRoutes";
 import AboutPage from "./pages/AboutPage";
 import CreateSession from "./pages/CreateSession";
 import ProfilePage from "./pages/ProfilePage";
+import PaymentPage from "./pages/PaymentPage";
 
 function App() {
   return (
@@ -37,6 +38,14 @@ function App() {
           element={
             <ProtectedRoutes>
               <ProfilePage />
+            </ProtectedRoutes>
+          }
+        ></Route>
+                <Route
+          path="/payment"
+          element={
+            <ProtectedRoutes>
+              <PaymentPage />
             </ProtectedRoutes>
           }
         ></Route>
