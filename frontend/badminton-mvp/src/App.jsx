@@ -8,6 +8,7 @@ import AboutPage from "./pages/AboutPage";
 import CreateSession from "./pages/CreateSession";
 import ProfilePage from "./pages/ProfilePage";
 import JoinSession from "./pages/JoinSession";
+import SessionMatchPage from "./pages/SessionMatchPage";
 
 function App() {
   return (
@@ -46,6 +47,14 @@ function App() {
           element={
             <ProtectedRoutes>
               <ProfilePage />
+            </ProtectedRoutes>
+          }
+        ></Route>
+        <Route
+          path="/session-match"
+          element={
+            <ProtectedRoutes>
+              <SessionMatchPage />
             </ProtectedRoutes>
           }
         ></Route>
