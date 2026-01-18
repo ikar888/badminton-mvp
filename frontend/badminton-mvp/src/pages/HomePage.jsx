@@ -55,7 +55,7 @@ const HomePage = () => {
         onClick={() => {navigate("/create-session")}}/>
         <Button01 
         buttonName="Join a Session" 
-        onClick={() => {navigate("/join-session")}}/>
+        onClick={() => {}}/>
       </main>
     </div>
   );

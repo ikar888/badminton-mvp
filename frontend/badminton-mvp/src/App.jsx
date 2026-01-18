@@ -7,7 +7,6 @@ import ProtectedRoutes from "./utils/ProtectedRoutes";
 import AboutPage from "./pages/AboutPage";
 import CreateSession from "./pages/CreateSession";
 import ProfilePage from "./pages/ProfilePage";
-import JoinSession from "./pages/JoinSession";
 
 function App() {
   return (
@@ -30,14 +29,6 @@ function App() {
           element={
             <ProtectedRoutes>
               <CreateSession />
-            </ProtectedRoutes>
-          }
-        ></Route>
-        <Route
-          path="/join-session"
-          element={
-            <ProtectedRoutes>
-              <JoinSession />
             </ProtectedRoutes>
           }
         ></Route>
