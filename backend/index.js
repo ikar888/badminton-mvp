@@ -11,7 +11,8 @@ import paymentGMRoutes from "./routes/paymentGMRoutes.js";
 import paymentPlayerRoutes from "./routes/paymentPlayerRoutes.js";
 import webhookRoutes from "./routes/webhook.js";
 import analysisRoutes from "./routes/analysisRoutes.js";
-import cors from "cors";
+import dotenv from "dotenv";
+
 
 dotenv.config();
 
