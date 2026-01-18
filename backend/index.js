@@ -11,9 +11,6 @@ import paymentGMRoutes from "./routes/paymentGMRoutes.js";
 import paymentPlayerRoutes from "./routes/paymentPlayerRoutes.js";
 import webhookRoutes from "./routes/webhook.js";
 import analysisRoutes from "./routes/analysisRoutes.js";
-import cors from "cors";
-
-dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
