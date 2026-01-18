@@ -1,11 +1,12 @@
-const TextBox = ({ className, type, value, onChange, placeholderText }) => {
+const TextBox = ({ name, className, type, value, onChange, placeholderText }) => {
   return (
     <>
     <input
+    name={name}
     className={className}
     type={type}
     value={value}
-    onChange={(e) => onChange(e.target.value)}
+    onChange={onChange}
     placeholder={placeholderText}
     > 
     </input>

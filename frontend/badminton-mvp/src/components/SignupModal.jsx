@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaTimes } from "react-icons/fa";
+import { FaTimes, FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
 
 const SignupModal = ({ onClose, openLogin }) => {
@@ -108,7 +108,7 @@ const SignupModal = ({ onClose, openLogin }) => {
               onClick={() => setShowPassword(!showPassword)}
               className="absolute right-2 top-2 text-sm text-gray-600"
             >
-              {showPassword ? "Hide" : "Show"}
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
 
@@ -127,7 +127,7 @@ const SignupModal = ({ onClose, openLogin }) => {
               onClick={() => setShowPassword(!showPassword)}
               className="absolute right-2 top-2 text-sm text-gray-600"
             >
-              {showPassword ? "Hide" : "Show"}
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
 
