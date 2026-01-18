@@ -8,11 +8,39 @@ export const createSession = async (req, res) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
+    const newStartTime = new Date(startTime);
+    const newEndTime = new Date(endTime);
+
+    if (newStartTime >= newEndTime) {
+      return res.status(400).json({
+        message: "Start time must be before end time",
+      });
+    }
+
+    const existingSessions = await Session.find({
+      gameMasterID: req.user._id,
+      date,
+    });
+
+    for (const session of existingSessions) {
+      const existingStart = new Date(session.startTime);
+      const existingEnd = new Date(session.endTime);
+
+      if (
+        newStartTime < existingEnd &&
+        newEndTime > existingStart
+      ) {
+        return res.status(400).json({
+          message: "Session time overlaps with an existing session",
+        });
+      }
+    }
+
     const session = await Session.create({
       gameMasterID: req.user._id,
       date,
-      startTime,
-      endTime,
+      startTime: newStartTime,
+      endTime: newEndTime,
       perGameFee,
       location,
     });
