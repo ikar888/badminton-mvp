@@ -8,17 +8,15 @@ export const signup = async (req, res) => {
 
     if (!username || !email || !password || !skillLevel) {
       return res.status(400).json({
-        message: "All fields are required",
+        message: "All fields are required",,
       });
     }
 
-    const existingUser = await User.findOne({
-      $or: [{ email }, { username }],
-    });
+    const existingUser = await User.findOne({ email });
 
     if (existingUser) {
       return res.status(409).json({
-        message: "Username or email already in use",
+        message: "Email already in use",
       });
     }
 
