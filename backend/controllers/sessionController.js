@@ -113,10 +113,13 @@ export const getUpcomingSessions = async (req, res) => {
 
     const sessions = await Session.find({
       date: { $gte: now }
-    }).sort({ date: 1, startTime: 1});
+    })
+      .populate("gameMasterID", "username")
+      .sort({ date: 1, startTime: 1 });
 
     res.status(200).json(sessions);
   } catch (err) {
+    console.error("Get upcoming sessions error:", err);
     res.status(500).json({ message: "Failed to fetch sessions" });
   }
 };
