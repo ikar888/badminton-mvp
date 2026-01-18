@@ -13,18 +13,10 @@ export async function analyzeVideo(filePath) {
 
   const prompt = `
     Analyze this badminton training video.
-    Provide your insights in three clear sections suitable for a user interface:
-
-    **Strengths**
-    - List the player's strong points in bullet form.
-
-    **Weaknesses**
-    - List the areas that need improvement in bullet form.
-
-    **Improvement Suggestions**
-    - Provide actionable recommendations in bullet form.
-
-    Keep the response concise, structured, and easy to display.
+    Provide insights in JSON format with keys:
+    - strengths (list)
+    - weaknesses (list)
+    - improvementSuggestions (list)
   `;
 
   const result = await model.generateContent([
