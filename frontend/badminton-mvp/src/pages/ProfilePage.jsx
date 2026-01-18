@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import axios from "axios";
 import Navbar from "../components/Navbar";
 import TextBox from "../components/TextBox";
 import Button01 from "../components/Button01";
@@ -15,12 +15,10 @@ const ProfilePage = () => {
   });
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
 
   const rowClass = "flex items-center justify-center mb-4";
   const labelClass = "text-lg font-medium text-emerald-900 w-32 text-right mr-4";
-  const inputClass = `border border-gray-300 rounded px-3 py-2 w-64 focus:ring-2 focus:ring-emerald-500 focus:outline-none bg-white text-left 
-  ${!isEditing ? "pointer-events-none caret-transparent cursor-default select-none focus:ring-0" : "caret-black cursor-text"}`;
+  const inputClass = "border border-gray-300 rounded px-3 py-2 w-64 focus:ring-2 focus:ring-emerald-500 focus:outline-none bg-white text-left";
 
   useEffect (() => {
     const fetchProfile = async() => {
@@ -31,30 +29,37 @@ const ProfilePage = () => {
         const { username, email, skillLevel } = profile.data.user;
         setProfileData((prev) => ({ ...prev, username, email, skillLevel }));
       } catch (error) {
-        setError(error.response?.data?.message || "Failed to Fetch Profile");
+        setError(err.response?.data?.message || "Failed to Fetch Profile");
         setSuccess("");
       }
     }
     fetchProfile();
   },[]);
 
-    const handleButtonClick = async () => {
+  const handleButtonClick = async () => {
     if (!isEditing) {
       setIsEditing(true);
     } else {
-      await handleUpdate(); 
-      setIsEditing(false);
+      try {
+        await axios.put("http://localhost:5000/api/update", formData, {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+        });
+        alert("Profile saved!");
+        setIsEditing(false);
+      } catch (err) {
+        console.error("Save failed:", err);
+      }
     }
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setProfileData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   }
 
   const handleUpdate = async () => {
     try {
-      await axiosInstance.put("/api/v1/users/me", profileData)
+      await axios.put("/api/v1/users/me", profileData)
       setSuccess("Profile Successfully Updated");
       setError("");
     } catch (err) {
@@ -70,17 +75,6 @@ const ProfilePage = () => {
         <h1 className="text-4xl font-bold text-emerald-900 mb-6">
           My Profile
         </h1>
-        {error && (
-          <div className="bg-red-100 text-red-700 p-2 mb-4 rounded text-sm">
-            {error}
-          </div>
-        )}
-
-        {success && (
-          <div className="bg-green-100 text-green-700 p-2 mb-4 rounded text-sm">
-            {success}
-          </div>
-        )}
         <div className={rowClass}>
           <label 
           className={labelClass}
@@ -118,26 +112,15 @@ const ProfilePage = () => {
           >
             Password:
           </label>
-          <div className="relative w-64">
           <TextBox 
             name="password"
             value={profileData.password}
             onChange={handleChange}
             className = {inputClass}
-            type={showPassword ? "text" : "password"}
-            placeholderText={"********"}
+            type="text"
+            placeholderText="********"
             required
           />
-    {isEditing && (
-      <button
-        type="button"
-        onClick={() => setShowPassword(!showPassword)}
-        className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-700 hover:text-emerald-900"
-      >
-        {showPassword ? <FaEyeSlash /> : <FaEye />}
-      </button>
-    )}
-            </div>
         </div>
         <div className={rowClass}>
           <label
@@ -146,15 +129,22 @@ const ProfilePage = () => {
             Skill Level:
           </label>
           <select
-            name="skillLevel"
             value={profileData.skillLevel}
             onChange={handleChange}
             className = {inputClass}
+            required
           >
             <option value="beginner">Beginner</option>
             <option value="intermediate">Intermediate</option>
             <option value="advanced">Advanced</option>
           </select>
+
+          {/* <TextBox 
+            className = {inputClass}
+            type="text"
+            placeholderText="Skill Level"
+            required
+          /> */}
         </div>
         <div>
           <Button01 
