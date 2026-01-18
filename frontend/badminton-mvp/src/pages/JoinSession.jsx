@@ -102,9 +102,7 @@ const JoinSession = () => {
               >
                 <p>
                   <span className="font-medium">Game Master:</span>{" "}
-                  {session.gameMaster?.username ||
-                    session.gameMasterName ||
-                    "Unknown"}
+                  {session.gameMasterID?.username || "Unknown"}
                 </p>
 
                 <p>
