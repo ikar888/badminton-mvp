@@ -1,4 +1,5 @@
 import Session from "../models/session.js";
+import User from "../models/User.js";
 
 export const createSession = async (req, res) => {
   try {
@@ -45,6 +46,14 @@ export const createSession = async (req, res) => {
       location,
     });
 
+    await User.findByIdAndUpdate(
+      req.user._id, { 
+        role: { 
+          isPlayer: true, 
+          isGameMaster: true, 
+        }, 
+      });
+      
     res.status(201).json(session);
   } catch (err) {
     res.status(500).json({ message: err.message });
