@@ -158,7 +158,7 @@ const ProfilePage = () => {
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-900 hover:text-emerald-600 disabled:opacity-50"
                     disabled={!isEditing}
                   >
-                    {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
+                    {showPassword ? <FaRegEye /> : <FaRegEyeSlash />}
                   </button>
                 </div>
               </div>
