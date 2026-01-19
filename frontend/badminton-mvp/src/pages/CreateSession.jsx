@@ -1,5 +1,5 @@
 import Navbar from "../components/Navbar";
-import TextBox from "../components/TextBox";
+import TextBox01 from "../components/TextBox01";
 import { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -73,7 +73,7 @@ const CreateSession = () => {
               className={labelClass}
               >
                 Location:</label>
-              <TextBox 
+              <TextBox01 
               className = {inputClass}
               type="text"
               placeholderText="Location"
@@ -138,7 +138,7 @@ const CreateSession = () => {
               >
                 Per Game Fee:
               </label>
-              <TextBox
+              <TextBox01
                 className={inputClass}
                 type="number"
                 placeholderText="Per Game Fee"
