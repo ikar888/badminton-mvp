@@ -119,18 +119,23 @@ export const getSessionById = async (req, res) => {
 export const getUpcomingSessions = async (req, res) => {
   try {
     const now = new Date();
-    const currentUserId = req.user?._id; 
+    const currentUserId = req.payload?.id;
+
     const sessions = await Session.find({
       date: { $gte: now }
     })
       .populate("gameMasterID", "username")
-      .sort({ date: 1, startTime: 1 }).lean();
+      .populate("players", "username")
+      .sort({ date: 1, startTime: 1 })
+      .lean();
+
     const sessionsWithStatus = sessions.map(session => ({
       ...session,
       isJoined: session.players?.some(
-        id => id.toString() === currentUserId?.toString()
+        player => player._id.toString() === currentUserId
       ) || false
     }));
+
     res.status(200).json(sessionsWithStatus);
   } catch (err) {
     console.error("Get upcoming sessions error:", err);
