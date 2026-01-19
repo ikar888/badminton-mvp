@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import api from "../api/axios";
+import ViewSessionModal from "../components/ViewSessionModal";
 
 const JoinSession = () => {
   const [sessions, setSessions] = useState([]);
@@ -10,6 +11,7 @@ const JoinSession = () => {
   const [loading, setLoading] = useState(true);
   const [joiningId, setJoiningId] = useState(null);
   const [joinedIds, setJoinedIds] = useState(new Set());
+  const [selectedSession, setSelectedSession] = useState(null);
 
   const navigate = useNavigate();
 
@@ -18,13 +20,15 @@ const JoinSession = () => {
       try {
         const res = await api.get("/api/v1/sessions/upcoming");
         const sessionsData = res.data;
+
         const joinedFromBackend = new Set(
-        sessionsData
-          .filter(session => session.isJoined === true)
-          .map(session => session._id)
-      );
-            setSessions(sessionsData);
-      setJoinedIds(joinedFromBackend);
+          sessionsData
+            .filter((session) => session.isJoined === true)
+            .map((session) => session._id)
+        );
+
+        setSessions(sessionsData);
+        setJoinedIds(joinedFromBackend);
         setError("");
       } catch {
         setError("Failed to load sessions");
@@ -140,22 +144,36 @@ const JoinSession = () => {
                   ₱{session.perGameFee}
                 </p>
 
-                <button
-                  onClick={() => handleJoin(session._id)}
-                  disabled={isJoining || isJoined}
-                  className="mt-3 bg-emerald-700 text-white px-4 py-2 rounded hover:bg-emerald-800 disabled:opacity-50"
-                >
-                  {isJoined
-                    ? "Joined"
-                    : isJoining
-                    ? "Joining..."
-                    : "Join Session"}
-                </button>
+                <div className="flex gap-3 mt-4">
+                  <button
+                    onClick={() => handleJoin(session._id)}
+                    disabled={isJoining || isJoined}
+                    className="bg-emerald-700 text-white px-4 py-2 rounded hover:bg-emerald-800 disabled:opacity-50"
+                  >
+                    {isJoined
+                      ? "Joined"
+                      : isJoining
+                      ? "Joining..."
+                      : "Join Session"}
+                  </button>
+
+                  <button
+                    onClick={() => setSelectedSession(session)}
+                    className="border border-emerald-700 text-emerald-700 px-4 py-2 rounded hover:bg-emerald-50"
+                  >
+                    View
+                  </button>
+                </div>
               </div>
             );
           })}
         </div>
       </main>
+
+      <ViewSessionModal
+        session={selectedSession}
+        onClose={() => setSelectedSession(null)}
+      />
     </div>
   );
 };
