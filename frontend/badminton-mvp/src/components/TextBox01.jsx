@@ -13,7 +13,7 @@ const TextBox = ({
       className={className}
       type={type}
       value={value}
-      onChange={onChange}
+      onChange={(e) => onChange(e.target.value)} 
       placeholder={placeholderText}
       name={name}
       required={required}
