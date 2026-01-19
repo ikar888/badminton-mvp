@@ -1,40 +1,56 @@
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import api from "../api/axios";
 
 const SessionMatchPage = () => {
+  const { sessionId } = useParams();
+
+  const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-
-  // Placeholder state (to be wired later)
-  const [teams, setTeams] = useState({
-    team1: ["Team 1 Player 1", "Team 1 Player 2"],
-    team2: ["Team 2 Player 1", "Team 2 Player 2"],
-  });
-
-  const [availablePlayers, setAvailablePlayers] = useState([
-    "Player A",
-    "Player B",
-    "Player C",
-    "Player D",
-  ]);
-
-  const [matchStatus, setMatchStatus] = useState("ongoing"); // ongoing | finished
+  const [matchStatus, setMatchStatus] = useState("ongoing");
 
   useEffect(() => {
-    // Later: fetch session + match data here
-    setLoading(false);
-  }, []);
+    const fetchSession = async () => {
+      try {
+        const res = await api.get(`/api/v1/sessions/${sessionId}`);
+        setSession(res.data);
+        setError("");
+      } catch {
+        setError("Failed to load session");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const handleStartGame = () => {
-    setSuccess("Game started");
-    setError("");
+    fetchSession();
+  }, [sessionId]);
+
+  const handleStartGame = async () => {
+    try {
+      await api.post("/api/v1/matches", { sessionId });
+      setSuccess("Game started");
+      setError("");
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to start game");
+      setSuccess("");
+    }
   };
 
-  const handleFinishGame = () => {
-    setSuccess("Game finished");
-    setError("");
+  const handleFinishGame = async () => {
+    const currentMatchId = session?.queue?.[0];
+    if (!currentMatchId) return;
+
+    try {
+      await api.patch(`/api/v1/matches/${currentMatchId}/finish`);
+      setSuccess("Game finished");
+      setError("");
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to finish game");
+      setSuccess("");
+    }
   };
 
   return (
@@ -62,31 +78,19 @@ const SessionMatchPage = () => {
           <p className="text-gray-600 text-center">Loading match...</p>
         )}
 
-        {!loading && (
+        {!loading && session && (
           <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* LEFT – Teams */}
             <div className="bg-white p-6 rounded shadow flex flex-col justify-between">
               <div className="space-y-6">
                 <div>
-                  <p className="font-semibold mb-2">Team 1</p>
-                  {teams.team1.map((player, idx) => (
+                  <p className="font-semibold mb-2">Players</p>
+                  {session.players.map((player) => (
                     <div
-                      key={idx}
+                      key={player._id}
                       className="border p-3 rounded mb-2"
                     >
-                      {player}
-                    </div>
-                  ))}
-                </div>
-
-                <div>
-                  <p className="font-semibold mb-2">Team 2</p>
-                  {teams.team2.map((player, idx) => (
-                    <div
-                      key={idx}
-                      className="border p-3 rounded mb-2"
-                    >
-                      {player}
+                      {player.username}
                     </div>
                   ))}
                 </div>
@@ -127,22 +131,20 @@ const SessionMatchPage = () => {
 
               <div className="flex-1">
                 <p className="font-semibold mb-4">
-                  Game No. 1 (Queue No.)
+                  Game No. {session.queue.length || 1}
                 </p>
 
                 <p className="font-medium mb-2">Players</p>
 
                 <div className="space-y-3 mb-6">
-                  {[...teams.team1, ...teams.team2].map(
-                    (player, idx) => (
-                      <div
-                        key={idx}
-                        className="border p-3 rounded"
-                      >
-                        {player}
-                      </div>
-                    )
-                  )}
+                  {session.players.map((player) => (
+                    <div
+                      key={player._id}
+                      className="border p-3 rounded"
+                    >
+                      {player.username}
+                    </div>
+                  ))}
                 </div>
               </div>
 
@@ -157,24 +159,11 @@ const SessionMatchPage = () => {
             {/* RIGHT – Available Players */}
             <div className="bg-white p-6 rounded shadow">
               <p className="font-semibold mb-4">
-                Available Players
+                Game Master
               </p>
 
-              {availablePlayers.length === 0 && (
-                <p className="text-gray-600">
-                  No available players
-                </p>
-              )}
-
-              <div className="space-y-3">
-                {availablePlayers.map((player, idx) => (
-                  <div
-                    key={idx}
-                    className="border p-3 rounded"
-                  >
-                    {player}
-                  </div>
-                ))}
+              <div className="border p-3 rounded">
+                {session.gameMasterID?.username}
               </div>
             </div>
           </div>
