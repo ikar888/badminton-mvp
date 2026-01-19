@@ -3,26 +3,30 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import api from "../api/axios";
 
-const JOINED_SESSIONS_KEY = 'joinedSessionIds';
-
 const JoinSession = () => {
   const [sessions, setSessions] = useState([]);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(true);
   const [joiningId, setJoiningId] = useState(null);
-  // const [joinedIds, setJoinedIds] = useState(new Set());
+  const [joinedIds, setJoinedIds] = useState(new Set());
 
   const navigate = useNavigate();
-  const [joinedIds, setJoinedIds] = useState(new Set(
-    JSON.parse(localStorage.getItem(JOINED_SESSIONS_KEY) || '[]')
-  ));
 
   useEffect(() => {
     const fetchSessions = async () => {
       try {
         const res = await api.get("/api/v1/sessions/upcoming");
-        setSessions(res.data);
+        // setSessions(res.data);
+        const sessionsData = res.data;
+const joinedFromBackend = new Set(
+        sessionsData
+          .filter(session => session.isJoined === true)
+          .map(session => session._id)
+      );
+            setSessions(sessionsData);
+      setJoinedIds(joinedFromBackend);
+        // setJoinedIds(initialJoined);
         setError("");
       } catch {
         setError("Failed to load sessions");
@@ -33,11 +37,6 @@ const JoinSession = () => {
 
     fetchSessions();
   }, []);
-
-  useEffect(() => {
-    localStorage.setItem(JOINED_SESSIONS_KEY, JSON.stringify(Array.from(joinedIds)));
-  }, [joinedIds]);
-
 
   const handleJoin = async (sessionId) => {
     setJoiningId(sessionId);
