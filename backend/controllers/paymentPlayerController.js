@@ -1,8 +1,39 @@
 import Payment from  "../models/payment.js";
 import Stripe from "stripe";
 
-
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
+
+const viewAllMyPayment = async (req, res) => {
+  try {
+    const userID = req.user._id; 
+
+    // This is the essential part: populate related fields
+    const payments = await Payment.find({ playerID: userID })
+      .populate({
+        path: 'gameMasterID',
+        select: 'firstName lastName' 
+      })
+      .populate({
+        path: 'sessionID',
+        select: 'location date startTime endTime perGameFee' 
+      });
+
+    if (!payments.length) {
+      return res.status(404).json({
+        message: "No payment records found"
+      });
+    }
+
+    res.status(200).json({
+      data: payments
+    });
+  } catch (error) {
+    console.error("View All Payments error:", error);
+    res.status(500).json({
+      message: "Server error during view all payments"
+    });
+  }
+};
 
 const viewMyPayment = async (req, res) => {
   try {
@@ -67,6 +98,7 @@ const makePayment = async (req, res) => {
 }
 
 export {
+  viewAllMyPayment,
   viewMyPayment,
   makePayment
 }
