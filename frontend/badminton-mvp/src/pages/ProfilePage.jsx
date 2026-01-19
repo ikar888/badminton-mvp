@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Button01 from "../components/Button01";
 import axiosInstance from "../api/api";
 import { uploadAndAnalyzeVideo } from "../api/videoApi";
-
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({
@@ -19,6 +19,7 @@ const ProfilePage = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [analysisResult, setAnalysisResult] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const inputClass =
     "border border-gray-300 rounded px-3 py-2 w-full focus:ring-2 focus:ring-emerald-500 focus:outline-none bg-white";
@@ -139,17 +140,27 @@ const ProfilePage = () => {
                 >
                   Password
                 </label>
-                <TextBox
-                  id="profile-password"
-                  name="password"
-                  className={inputClass}
-                  type="password"
-                  value={profileData.password}
-                  onChange={handleChange}
-                  placeholderText="********"
-                  required
-                  disabled={!isEditing}
-                />
+                <div className="relative">
+                  <TextBox
+                    id="profile-password"
+                    name="password"
+                    className={inputClass}
+                    type={showPassword ? "text" : "password"}
+                    value={profileData.password}
+                    onChange={handleChange}
+                    placeholderText="********"
+                    required
+                    disabled={!isEditing}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-900 hover:text-emerald-600 disabled:opacity-50"
+                    disabled={!isEditing}
+                  >
+                    {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
+                  </button>
+                </div>
               </div>
               <div>
                 <label
