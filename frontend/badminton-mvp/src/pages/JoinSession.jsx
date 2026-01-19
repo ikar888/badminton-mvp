@@ -17,16 +17,14 @@ const JoinSession = () => {
     const fetchSessions = async () => {
       try {
         const res = await api.get("/api/v1/sessions/upcoming");
-        // setSessions(res.data);
         const sessionsData = res.data;
-const joinedFromBackend = new Set(
+        const joinedFromBackend = new Set(
         sessionsData
           .filter(session => session.isJoined === true)
           .map(session => session._id)
       );
             setSessions(sessionsData);
       setJoinedIds(joinedFromBackend);
-        // setJoinedIds(initialJoined);
         setError("");
       } catch {
         setError("Failed to load sessions");
