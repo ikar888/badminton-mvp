@@ -2,7 +2,6 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import Button01 from './Button01';
 
-// ✅ CORRECT publishable key
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 const PaymentForm = ({ clientSecret, amount, onSuccess, onCancel }) => {
@@ -50,17 +49,16 @@ const PaymentForm = ({ clientSecret, amount, onSuccess, onCancel }) => {
           Total: ₱{amount?.toFixed(2)}
         </div>
         <div className="flex gap-2 justify-end pt-2">
-          <button
-            type="button"
+          <Button01
+            buttonName= {"Cancel"}
+            type="submit"
             onClick={onCancel}
-            className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
-          >
-            Cancel
-          </button>
+          />
           <Button01 
             buttonName= {"Pay Now"}
-            type="submit" disabled={!stripe}>
-          </Button01>
+            type="submit" 
+            disabled={!stripe}
+          />
         </div>
       </div>
     </form>
