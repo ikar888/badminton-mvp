@@ -3,15 +3,20 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import api from "../api/axios";
 
+const JOINED_SESSIONS_KEY = 'joinedSessionIds';
+
 const JoinSession = () => {
   const [sessions, setSessions] = useState([]);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(true);
   const [joiningId, setJoiningId] = useState(null);
-  const [joinedIds, setJoinedIds] = useState(new Set());
+  // const [joinedIds, setJoinedIds] = useState(new Set());
 
   const navigate = useNavigate();
+  const [joinedIds, setJoinedIds] = useState(new Set(
+    JSON.parse(localStorage.getItem(JOINED_SESSIONS_KEY) || '[]')
+  ));
 
   useEffect(() => {
     const fetchSessions = async () => {
@@ -28,6 +33,11 @@ const JoinSession = () => {
 
     fetchSessions();
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem(JOINED_SESSIONS_KEY, JSON.stringify(Array.from(joinedIds)));
+  }, [joinedIds]);
+
 
   const handleJoin = async (sessionId) => {
     setJoiningId(sessionId);
