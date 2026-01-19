@@ -124,6 +124,7 @@ export const getUpcomingSessions = async (req, res) => {
       date: { $gte: now }
     })
       .populate("gameMasterID", "username")
+      .populate("players", "username")
       .sort({ date: 1, startTime: 1 });
 
     res.status(200).json(sessions);
