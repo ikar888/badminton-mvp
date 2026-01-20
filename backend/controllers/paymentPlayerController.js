@@ -1,0 +1,104 @@
+import Payment from  "../models/payment.js";
+import Stripe from "stripe";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
+
+const viewAllMyPayment = async (req, res) => {
+  try {
+    const userID = req.user._id; 
+
+    // This is the essential part: populate related fields
+    const payments = await Payment.find({ playerID: userID })
+      .populate({
+        path: 'gameMasterID',
+        select: 'firstName lastName' 
+      })
+      .populate({
+        path: 'sessionID',
+        select: 'location date startTime endTime perGameFee' 
+      });
+
+    if (!payments.length) {
+      return res.status(404).json({
+        message: "No payment records found"
+      });
+    }
+
+    res.status(200).json({
+      data: payments
+    });
+  } catch (error) {
+    console.error("View All Payments error:", error);
+    res.status(500).json({
+      message: "Server error during view all payments"
+    });
+  }
+};
+
+const viewMyPayment = async (req, res) => {
+  try {
+    const userID = req.user._id;
+    const { sessionID } = req.params;
+    const viewPayment = await Payment.find({
+      playerID: userID,
+      sessionID: sessionID
+    });
+
+    if(!viewPayment.length) {
+      return res.status(404).json({
+        message: "No record found"
+      })
+    };
+
+    res.status(200).json({
+      data: viewPayment
+    });
+
+  } catch (error) {
+    console.error("View Payment error:", error);
+    res.status(500).json({
+      message: "Server error during view payment"
+    })
+  }
+}
+
+const makePayment = async (req, res) => {
+  try {
+    const userID = req.user._id
+    const { sessionID } = req.params;
+    const viewPayment = await Payment.findOne({
+      playerID: userID,
+      sessionID: sessionID
+    });
+
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: viewPayment.totalAmount * 100,
+      currency: "php",
+      automatic_payment_methods: {
+        enabled: true,
+        allow_redirects: 'never' 
+      }
+    });
+
+    viewPayment.paymentIntentId = paymentIntent.id;
+    await viewPayment.save();
+  
+    res.status(200).json({
+      message: "Payment Intent Created",
+      clientSecret: paymentIntent.client_secret,
+      paymentIntentId: paymentIntent.id
+    });
+
+  } catch (error) {
+    console.error("Payment error:", error);
+    res.status(500).json({
+      message: "Payment Failed"
+    })
+  }
+}
+
+export {
+  viewAllMyPayment,
+  viewMyPayment,
+  makePayment
+}
