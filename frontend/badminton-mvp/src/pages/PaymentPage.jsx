@@ -32,7 +32,6 @@ const PaymentPage = () => {
   const handlePayNow = async (sessionId) => {
     try {
       const res = await axiosInstance.put(`/api/v1/payments/player/makePayment/${sessionId}`);
-      console.log("Client secret:", res.data.clientSecret);
 
       setStripeModal({
         open: true,

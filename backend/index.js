@@ -21,7 +21,7 @@ app.use("/webhook", express.raw({ type: "application/json" }), webhookRoutes);
 app.use(express.json());
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.NEXT_PUBLIC_HOST,
     credentials: true,
   }),
 );

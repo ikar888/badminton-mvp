@@ -86,7 +86,8 @@ const makePayment = async (req, res) => {
     res.status(200).json({
       message: "Payment Intent Created",
       clientSecret: paymentIntent.client_secret,
-      paymentIntentId: paymentIntent.id
+      paymentIntentId: paymentIntent.id,
+      totalAmount: viewPayment.totalAmount
     });
 
   } catch (error) {
