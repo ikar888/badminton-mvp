@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router";
-import axios from "axios";
+import backendAPI from "../api/backendAPI";
 
 const LoginModal = ({ onClose, openSignup }) => {
   const [email, setEmail] = useState("");
@@ -19,8 +19,8 @@ const LoginModal = ({ onClose, openSignup }) => {
     setError(null);
 
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/v1/auth/login`,
+      const response = await backendAPI.post(
+        "/api/v1/auth/login",
         { email, password },
         { withCredentials: true }
       );

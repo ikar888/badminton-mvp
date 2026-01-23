@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import Button01 from "../components/Button01";
-import axiosInstance from "../api/api";
+import backendAPI from "../api/backendAPI";
 import StripePaymentModal from '../components/StripePaymentModal';
 
 const PaymentPage = () => {
@@ -16,7 +16,7 @@ const PaymentPage = () => {
   useEffect(() => {
     const fetchPayments = async () => {
       try {
-        const res = await axiosInstance.get(`/api/v1/payments/player/viewMyPayment`);
+        const res = await backendAPI.get(`/api/v1/payments/player/viewMyPayment`);
         setPayments(res.data.data || []);
       } catch (err) {
         console.error("Error fetching payments:", err);
@@ -31,7 +31,7 @@ const PaymentPage = () => {
   // Handle Pay Now button
   const handlePayNow = async (sessionId) => {
     try {
-      const res = await axiosInstance.put(`/api/v1/payments/player/makePayment/${sessionId}`);
+      const res = await backendAPI.put(`/api/v1/payments/player/makePayment/${sessionId}`);
 
       setStripeModal({
         open: true,

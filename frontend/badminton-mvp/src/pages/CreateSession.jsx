@@ -3,7 +3,7 @@ import TextBox01 from "../components/TextBox01";
 import { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { createSession } from "../api/sessionApi";
+import backendAPI from "../api/backendAPI";
 import { useNavigate } from "react-router-dom";
 
 const CreateSession = () => {
@@ -22,7 +22,7 @@ const CreateSession = () => {
     e.preventDefault();
 
     try {
-      await createSession({
+      await backendAPI.post("/api/v1/sessions",{
         location,
         date,
         startTime,

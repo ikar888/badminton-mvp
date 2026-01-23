@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import api from "../api/axios";
+import backendAPI from "../api/backendAPI";
 import ViewSessionModal from "../components/ViewSessionModal";
 
 const JoinSession = () => {
@@ -18,7 +18,7 @@ const JoinSession = () => {
   useEffect(() => {
     const fetchSessions = async () => {
       try {
-        const res = await api.get("/api/v1/sessions/upcoming");
+        const res = await backendAPI.get("/api/v1/sessions/upcoming");
         const sessionsData = res.data;
 
         const joinedFromBackend = new Set(
@@ -44,7 +44,7 @@ const JoinSession = () => {
     setJoiningId(sessionId);
 
     try {
-      await api.patch(`/api/v1/sessions/${sessionId}/join`);
+      await backendAPI.patch(`/api/v1/sessions/${sessionId}/join`);
 
       setJoinedIds((prev) => new Set(prev).add(sessionId));
       setSuccess("Successfully joined the session");

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FaTimes, FaRegEye, FaRegEyeSlash } from "react-icons/fa";
-import axios from "axios";
+import backendAPI from "../api/backendAPI";
 
 const SignupModal = ({ onClose, openLogin }) => {
   const [username, setUsername] = useState("");
@@ -26,8 +26,8 @@ const SignupModal = ({ onClose, openLogin }) => {
     }
 
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/v1/auth/signup`,
+      const response = await backendAPI.post(
+        "/api/v1/auth/signup",
         { username, email, password, skillLevel }
       );
 

@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const axiosInstance = axios.create({
+const backendAPI = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   withCredentials: true,
   timeout: 5000,
@@ -9,4 +9,4 @@ const axiosInstance = axios.create({
   },
 })
 
-export default axiosInstance;
+export default backendAPI;

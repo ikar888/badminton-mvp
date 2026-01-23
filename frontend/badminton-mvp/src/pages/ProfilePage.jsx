@@ -2,7 +2,7 @@ import Navbar from "../components/Navbar";
 import TextBox from "../components/TextBox";
 import { useState, useEffect } from "react";
 import Button01 from "../components/Button01";
-import axiosInstance from "../api/api";
+import backendAPI from "../api/backendAPI";
 import { uploadAndAnalyzeVideo } from "../api/videoApi";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 const ProfilePage = () => {
@@ -28,7 +28,7 @@ const ProfilePage = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const profile = await axiosInstance.get("/api/v1/users/me", {
+        const profile = await backendAPI.get("/api/v1/users/me", {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         });
         const { username, email, skillLevel } = profile.data.user;
@@ -52,7 +52,7 @@ const ProfilePage = () => {
   // Handle save/update
   const handleSave = async () => {
     try {
-      await axiosInstance.put("/api/v1/users/me", profileData, {
+      await backendAPI.put("/api/v1/users/me", profileData, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       setSuccess("Profile saved!");
